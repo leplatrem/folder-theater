@@ -6,6 +6,8 @@ Generates a fancy Web page from a folder with movies files.
 All movies details are gathered from IMDb (cover, year, rating, plot, 
 director, actors).
 
+.. image:: http://mathieu-leplatre.info/media/folder-theatre.png
+
 =======
 INSTALL
 =======
