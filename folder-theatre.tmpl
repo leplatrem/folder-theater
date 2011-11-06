@@ -59,7 +59,7 @@
     <div class="container">
         <div class="content">
         {% for group in movies|groupby('ageweek') %}
-            <a name="week{{ group.grouper }}"/>
+            <a name="week{{ group.grouper }}"></a>
             {% for movie in group.list %}
             <section>
                 <div class="page-header">
