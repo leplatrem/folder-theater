@@ -21,7 +21,7 @@ from gettext import gettext as _
 
 try:
     from imdb import IMDb
-    from jinja2 import Template
+    from jinja2 import Environment
 except ImportError, e:
     print _("Error: %s, install typing:") % e
     print "sudo apt-get install python-imdbpy python-jinja2"
@@ -31,7 +31,7 @@ except ImportError, e:
 logger = logging.getLogger(__name__)
 
 MIN_FUZZY_RATIO = .5
-TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'template.tmpl')
+TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'folder-theatre.tmpl')
 ALLOCINE_URL = "http://www.allocine.fr/recherche/?q=%s" 
 
 BLACKLIST = ('dvdrip', 'bdrip',
@@ -78,6 +78,7 @@ def fetch_movie(name, filename, added):
     ia = IMDb()
     movie = ia.search_movie(name)
     if not movie:
+        logger.warning(_("No result for '%s'") % name)
         return None
     movie = movie[0]
     movie = ia.get_movie(movie.movieID)
@@ -124,8 +125,10 @@ def build_movies(titles):
 
 def render_page(movies, output=None):
     """ Render the movies list to specified output """
+    env = Environment(extensions=['jinja2.ext.i18n'])
+    env.install_null_translations()
     with open(TEMPLATE_PATH) as tpl:
-        template = Template(tpl.read().decode('utf-8'))
+        template = env.from_string(tpl.read().decode('utf-8'))
     # Default output is stdout
     out = sys.stdout
     if output:
