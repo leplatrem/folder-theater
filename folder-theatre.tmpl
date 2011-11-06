@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{% trans %}Folder theater{% endtrans %}</title>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css"/>
+    <style type="text/css">
+    html, body {
+        background-color: #eee;
+    }
+    body {
+        padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+    }
+    .container {
+        width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+    }
+    /* The white background content wrapper */    
+    .content {
+        background-color: #fff;
+        padding: 20px;
+        margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+        -webkit-border-radius: 0 0 6px 6px;
+           -moz-border-radius: 0 0 6px 6px;
+                border-radius: 0 0 6px 6px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    }
+    /* Page header tweaks */
+    .page-header {
+        background-color: #f5f5f5;
+        padding: 20px 20px 10px;
+        margin: -20px -20px 20px;
+    }
+    blockquote {
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+    section {
+        padding-bottom: 25px;
+    }
+    </style>
+</head>
+<body>
+    <!-- Top menu -->
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <ul class="nav">
+            <li><a href="#week0">{% trans %}This week{% endtrans %}</a></li>
+            <li><a href="#week1">{% trans %}Last week{% endtrans %}</a></li>
+            <li><a href="#week2">{% trans %}Older{% endtrans %}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container">
+        <div class="content">
+        {% for group in movies|groupby('ageweek') %}
+            <a name="week{{ group.grouper }}"/>
+            {% for movie in group.list %}
+            <section>
+                <div class="page-header">
+                    <h1>{{ movie.title }} <span class="year">({{ movie.year }})</span> <small><span class="filename">{{ movie.filename }}</span></small></h1>
+                </div>
+                <div class="row">
+                    <div class="cover span2">
+                    {% if movie.cover %}<img src="{{ movie.cover }}"/>{% endif %}
+                    </div>
+                    <div class="info span12">
+                        <span class="genres">{% for genre in movie.genres %}<span class="label notice">{{ genre }}</span>&nbsp;{% endfor %}</span>
+                        <span class="countries">{% for country in movie.countries %}<span class="label">{{ country }}</span>&nbsp;{% endfor %}</span>
+                        <span class="rating alert-message warning">{{ movie.rating }}</span>
+                        <span class="links"><a href="{{ movie.imdb }}">IMDb</a> - <a href="{{ movie.allocine }}">Allociné</a></span>
+                        <blockquote>
+                            <p>{{ movie.plot }}</p>
+                            <small><span class="directors">{% for director in movie.director %}{{ director.name }}, {% endfor %}</span></small>
+                        </blockquote>
+                        {% if movie.cast %}{% trans %}With{% endtrans %} <span class="actors">{% for actor in movie.cast[:5] %}{{ actor.name }}, {% endfor  %}...</span>{% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="offset2">
+                        {% if movie.added %}<span class="added"><big>☠</big> {{ movie.added.strftime('%Y-%m-%d %H:%M') }}</span>{% endif %}
+                    </div>
+                </div>
+            </section>
+            {% endfor %}
+        {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
