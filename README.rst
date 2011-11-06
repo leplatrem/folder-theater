@@ -1,4 +1,4 @@
-Folder-Theatre
+Folder-Theater
 ##############
 
 Generates a fancy Web page from a folder with movies files. 
@@ -27,7 +27,7 @@ USAGE
 
 ::
 
-    python folder-theatre.py [options] FOLDER
+    python folder-theater.py [options] FOLDER
 
     Options:
       -h, --help            show this help message and exit

@@ -31,7 +31,7 @@ except ImportError, e:
 logger = logging.getLogger(__name__)
 
 MIN_FUZZY_RATIO = .5
-TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'folder-theatre.tmpl')
+TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'folder-theater.tmpl')
 ALLOCINE_URL = "http://www.allocine.fr/recherche/?q=%s" 
 
 BLACKLIST = ('dvdrip', 'bdrip',
