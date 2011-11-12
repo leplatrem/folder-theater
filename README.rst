@@ -52,4 +52,11 @@ AUTHORS
 * Mathieu Leplatre <contact@mathieu-leplatre.info>
 
 
+================
+Related Software
+================
 
+Before to start writing the first line of code, I had found these projects :
+
+* `movie.js <http://www.gosu.pl/movies-en.html/>`_ by Czarek Tomczak. Exactly what I needed, but *Windows only*.
+* `Smewt <www.smewt.com/>`_ a *full-featured* media manager in python. No static output.
