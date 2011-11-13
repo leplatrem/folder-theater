@@ -20,7 +20,7 @@ import optparse
 from gettext import gettext as _
 
 try:
-    from imdb import IMDb
+    from imdb import IMDb, Movie
     from jinja2 import Environment
 except ImportError, e:
     print _("Error: %s, install typing:") % e
@@ -73,15 +73,34 @@ def movie_name(filepath):
     return name.strip()
 
 
-def fetch_movie(name, filename, added):
+def fetch_movie(name, filename, added, allow_empty=False):
     """ Scrap IMDB and returns a imdb.Movie object """
     ia = IMDb()
     movie = ia.search_movie(name)
+    empty = Movie.Movie(title=name)
+    empty.rating = '?'
+    
     if not movie:
         logger.warning(_("No result for '%s'") % name)
-        return None
-    movie = movie[0]
-    movie = ia.get_movie(movie.movieID)
+        if allow_empty:
+            movie = empty
+        else:
+            return None
+    else:
+        movie = movie[0]
+        movie = ia.get_movie(movie.movieID)
+        movie.imdb = ia.get_imdbURL(movie)
+    
+    # Ignore movies whose found title are too far from searched title
+    fulltitle = movie['title']
+    fuzzy = SequenceMatcher(None, name.lower(), fulltitle.lower()).ratio()
+    if fuzzy <= MIN_FUZZY_RATIO:
+        logger.warning(_("Possible mismatch '%s' for '%s'") % (fulltitle, name))
+        if allow_empty:
+            movie = empty
+        else:
+            return None
+    # Post process plot string
     p = movie.get('plot')
     if not p:
         p = ['']
@@ -90,16 +109,16 @@ def fetch_movie(name, filename, added):
     if i != -1:
         p = p[:i]
     movie.plot = p
+    # Additional fields
     movie.search = name
     movie.added = datetime.fromtimestamp(time.mktime(added))
     movie.ageweek = (datetime.now() - movie.added).days // 7
     movie.filename = filename
-    movie.imdb = ia.get_imdbURL(movie)
-    movie.allocine = ALLOCINE_URL % urllib.quote_plus(movie['title'].encode('utf-8'))
+    movie.allocine = ALLOCINE_URL % urllib.quote_plus(fulltitle.encode('utf-8'))
     return movie
 
 
-def build_movies(titles):
+def build_movies(titles, all=False):
     """ Return a list of imdb.Movie objects for a list of tuples with """
     chosen = []
     uniq = []
@@ -108,17 +127,11 @@ def build_movies(titles):
         title = movie_name(filename)    
         # Uniquify titles list
         if title not in uniq:
-            m = fetch_movie(title, filename, datetime)
+            m = fetch_movie(title, filename, datetime, allow_empty=all)
             if not m:
                 continue
-            # Ignore movies whose found title are too far from searched title
-            fulltitle = m['title']
-            fuzzy = SequenceMatcher(None, title.lower(), fulltitle.lower()).ratio()
-            if fuzzy > MIN_FUZZY_RATIO:
-                logger.info(_("Found '%s' for '%s' (%s)") % (fulltitle, title, filename))
-                chosen.append(m)
-            else:
-                logger.warning(_("Rejected '%s' for '%s'") % (fulltitle, title))
+            logger.info(_("Found '%s' for '%s' (%s)") % (m['title'], title, filename))
+            chosen.append(m)
             uniq.append(title)
     return chosen
 
@@ -146,6 +159,9 @@ if __name__ == '__main__':
     parser.add_option("-o", "--output",
                       dest="output", default=None,
                       help=_("Output to file"))
+    parser.add_option("-a", "--all",
+                      dest="all", default=False, action="store_true",
+                      help=_("Include unknown movies"))
     parser.add_option("-x", "--exclude",
                       dest="exclude", default="",
                       help=_("Comma-separated list of folders to exclude"))
@@ -163,4 +179,4 @@ if __name__ == '__main__':
     if options.limit > 0:
         filenames = filenames[:options.limit]
     # Convert to HTML
-    render_page(build_movies(filenames), options.output)
+    render_page(build_movies(filenames, options.all), options.output)
