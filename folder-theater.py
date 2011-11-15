@@ -39,6 +39,9 @@ BLACKLIST = ('dvdrip', 'bdrip',
              'french', 'fr', 'vo', 'vost',
              'xvid')
 
+MOVIE_EXT = ('ogm', 'avi', 'mp4', 'mkv', 'mpg', 'mpeg', 'divx', 'vob', 
+             'mt2s', '3gp', 'rmvb', 'rmv', 'wmv', 'mov')
+
 
 def list_titles(path, excludes=[]):
     """ Returns a list of files/folders names ordered by time desc. """
@@ -52,6 +55,8 @@ def list_titles(path, excludes=[]):
         if not os.path.isdir(filename):
             basename, ext = os.path.splitext(name)
             name = basename
+            if ext[1:] not in MOVIE_EXT:
+                continue
         titleslist.append((mtime, name.decode('utf-8')))
     titleslist.sort()
     titleslist.reverse()
