@@ -177,7 +177,7 @@ if __name__ == '__main__':
         parser.exit()
 
     # List files/folders
-    filenames = list_titles(args[1], excludes=options.exclude)
+    filenames = list_titles(args[1], excludes=options.exclude.split(","))
     if options.limit > 0:
         filenames = filenames[:options.limit]
     # Convert to HTML
