@@ -83,7 +83,6 @@ def fetch_movie(name, filename, added, allow_empty=False):
     ia = IMDb()
     movie = ia.search_movie(name)
     empty = Movie.Movie(title=name)
-    empty.rating = '?'
     
     if not movie:
         logger.warning(_("No result for '%s'") % name)
@@ -97,7 +96,7 @@ def fetch_movie(name, filename, added, allow_empty=False):
         movie.imdb = ia.get_imdbURL(movie)
     
     # Ignore movies whose found title are too far from searched title
-    fulltitle = movie['title']
+    fulltitle = movie.get('title', '')
     fuzzy = SequenceMatcher(None, name.lower(), fulltitle.lower()).ratio()
     if fuzzy <= MIN_FUZZY_RATIO:
         logger.warning(_("Possible mismatch '%s' for '%s'") % (fulltitle, name))
@@ -106,9 +105,7 @@ def fetch_movie(name, filename, added, allow_empty=False):
         else:
             return None
     # Post process plot string
-    p = movie.get('plot')
-    if not p:
-        p = ['']
+    p = movie.get('plot', [''])
     p = p[0]
     i = p.find('::')
     if i != -1:
