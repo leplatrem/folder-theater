@@ -101,7 +101,15 @@ def fetch_movie(name, basename, filename, added, allow_empty=False):
     
     # Ignore movies whose found title are too far from searched title
     fulltitle = movie.get('title', '')
-    fuzzy = SequenceMatcher(None, name.lower(), fulltitle.lower()).ratio()
+    akas = [fulltitle] + movie.get('akas', [])
+    fuzzy = 0
+    for aka in akas:
+        aka = aka.split('::')[0]
+        ratio = SequenceMatcher(None, name.lower(), aka.lower()).ratio()
+        if ratio > fuzzy:
+            fulltitle = aka
+            fuzzy = ratio
+    movie.title = fulltitle
     if fuzzy <= MIN_FUZZY_RATIO:
         logger.warning(_("Possible mismatch '%s' for '%s'") % (fulltitle, name))
         if allow_empty:
@@ -109,12 +117,8 @@ def fetch_movie(name, basename, filename, added, allow_empty=False):
         else:
             return None
     # Post process plot string
-    p = movie.get('plot', [''])
-    p = p[0]
-    i = p.find('::')
-    if i != -1:
-        p = p[:i]
-    movie.plot = p
+    p = movie.get('plot', [''])[0]
+    movie.plot = p.split('::')[0]
     # Additional fields
     movie.search = name
     movie.added = datetime.fromtimestamp(time.mktime(added))
@@ -137,7 +141,7 @@ def build_movies(titles, all=False):
             m = fetch_movie(title, basename, filename, datetime, allow_empty=all)
             if not m:
                 continue
-            logger.info(_("Found '%s' for '%s' (%s)") % (m['title'], title, basename))
+            logger.info(_("Found '%s' for '%s' (%s)") % (m['title'], title, filename))
             chosen.append(m)
             uniq.append(title)
     return chosen
