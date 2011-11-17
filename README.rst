@@ -33,6 +33,7 @@ USAGE
       -h, --help            show this help message and exit
       -o OUTPUT, --output=OUTPUT
                             Output to file
+      -a, --all             Include unknown movies
       -x EXCLUDE, --exclude=EXCLUDE
                             Comma-separated list of folders to exclude
       -l LIMIT, --limit=LIMIT
