@@ -84,7 +84,7 @@
             {% for movie in group.list %}
             <section>
                 <div class="page-header">
-                    <h1>{{ movie.title }} {% if movie.cast %}<span class="year">({{ movie.year }})</span> {% endif %}{% if movie.filename != movie.title %}<small><span class="filename">{{ movie.filename }}</span></small>{% endif %}</h1>
+                    <h1>{% if urlprefix %}<a href="{{ urlprefix }}{{ movie.filename }}">{% endif %}{{ movie.title }} {% if movie.cast %}<span class="year">({{ movie.year }})</span> {% endif %}{% if movie.basename != movie.title %}<small><span class="filename">{{ movie.basename }}</span></small>{% endif %}{% if urlprefix %}</a>{% endif %}</h1>
                 </div>
                 <div class="row">
                     <div class="cover span2">
