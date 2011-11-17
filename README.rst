@@ -36,9 +36,23 @@ USAGE
       -a, --all             Include unknown movies
       -x EXCLUDE, --exclude=EXCLUDE
                             Comma-separated list of folders to exclude
+      -s MINSIZE, --minsize=MINSIZE
+                            Exclude files smaller than this size (MB)
       -l LIMIT, --limit=LIMIT
                             Limit list of found filenames
+      -u URLPREFIX, --url=URLPREFIX
+                            Add a link to movie titles with this URL prefix
 
+Examples
+--------
+
+Add links for movies on local filesystem ::
+
+    python folder-theater.py --url="file" /path/to/folder/
+
+Add HTTP links for movies ::
+
+    python folder-theater.py --url="http://server/example/" /path/to/folder/
 
 =======
 LICENSE
