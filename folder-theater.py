@@ -44,7 +44,7 @@ MOVIE_EXT = ('ogm', 'avi', 'mp4', 'mkv', 'mpg', 'mpeg', 'divx', 'vob',
              'mt2s', '3gp', 'rmvb', 'rmv', 'wmv', 'mov')
 
 
-def list_titles(path, excludes=[]):
+def list_titles(path, excludes=[], minsize=-1):
     """ Returns a list of files/folders names ordered by time desc. """
     titleslist = []
     for name in os.listdir(path):
@@ -52,10 +52,12 @@ def list_titles(path, excludes=[]):
             continue
         filename = os.path.join(path, name)
         stats = os.stat(filename)
-        mtime = time.localtime(stats[8])
+        mtime = time.localtime(stats.st_mtime)
         if os.path.isdir(filename):
             basename = name
         else:
+            if stats.st_size < minsize*1024*1024:
+                continue
             basename, ext = os.path.splitext(name)
             if ext[1:] not in MOVIE_EXT:
                 continue
@@ -170,6 +172,9 @@ if __name__ == '__main__':
     parser.add_option("-x", "--exclude",
                       dest="exclude", default="",
                       help=_("Comma-separated list of folders to exclude"))
+    parser.add_option("-s", "--minsize",
+                      dest="minsize", type='int', default=-1,
+                      help=_("Exclude files smaller than this size (in MB)"))
     parser.add_option("-l", "--limit",
                       dest="limit", type='int', default=-1,
                       help=_("Limit list of found filenames"))
@@ -195,7 +200,7 @@ if __name__ == '__main__':
         options.urlprefix = url
 
     # List files/folders
-    filenames = list_titles(folder, excludes=options.exclude.split(","))
+    filenames = list_titles(folder, excludes=options.exclude.split(","), minsize=options.minsize)
     if options.limit > 0:
         filenames = filenames[:options.limit]
     # Convert to HTML
