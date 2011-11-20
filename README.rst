@@ -14,12 +14,14 @@ INSTALL
 
 It requires `jinja2 <http://jinja.pocoo.org/>`_ and `imdbpy <http://imdbpy.sourceforge.net>`_.
 
-On Ubuntu, install these with ::
+On *Debian* or *Ubuntu*, install these with ::
 
     sudo apt-get install python-jinja2 python-imdbpy
 
 
-*(Help for Windows and Mac OS instructions is welcome)*
+On *Windows*, follow `Czarek's tutorial <https://github.com/leplatrem/folder-theater/wiki>`_.
+
+*(Help for Mac OS instructions is welcome)*
 
 =====
 USAGE
