@@ -44,6 +44,8 @@ USAGE
                             Limit list of found filenames
       -u URLPREFIX, --url=URLPREFIX
                             Add a link to movie titles with this URL prefix
+      -t TITLE, --title=TITLE
+                            Specify page title
 
 Examples
 --------

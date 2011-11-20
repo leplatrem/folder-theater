@@ -147,7 +147,7 @@ def build_movies(titles, all=False):
     return chosen
 
 
-def render_page(movies, output=None, urlprefix=""):
+def render_page(movies, output=None, title="", urlprefix=""):
     """ Render the movies list to specified output """
     env = Environment(extensions=['jinja2.ext.i18n'])
     env.install_null_translations()
@@ -157,7 +157,7 @@ def render_page(movies, output=None, urlprefix=""):
     out = sys.stdout
     if output:
         out = open(output, 'w')
-    page = template.render(movies=movies, urlprefix=urlprefix)
+    page = template.render(movies=movies, title=title, urlprefix=urlprefix)
     out.write(page.encode('ascii', 'xmlcharrefreplace'))
     out.close()
 
@@ -185,6 +185,9 @@ if __name__ == '__main__':
     parser.add_option("-u", "--url",
                       dest="urlprefix", default="",
                       help=_("Add a link to movie titles with this URL prefix"))
+    parser.add_option("-t", "--title",
+                      dest="title", default="Folder Threater",
+                      help=_("Specify page title"))
 
     (options, args) = parser.parse_args(sys.argv)
     if len(args) < 2:
@@ -208,4 +211,7 @@ if __name__ == '__main__':
     if options.limit > 0:
         filenames = filenames[:options.limit]
     # Convert to HTML
-    render_page(build_movies(filenames, options.all), options.output, options.urlprefix)
+    render_page(build_movies(filenames, options.all), 
+                options.output,
+                options.title.decode('utf-8'),
+                options.urlprefix)
