@@ -61,7 +61,7 @@ def list_titles(path, excludes=[], minsize=-1):
             basename, ext = os.path.splitext(name)
             if ext[1:] not in MOVIE_EXT:
                 continue
-        titleslist.append((mtime, basename.decode('utf-8'), name))
+        titleslist.append((mtime, basename.decode('utf-8'), name.decode('utf-8')))
     titleslist.sort()
     titleslist.reverse()
     return titleslist
@@ -124,7 +124,7 @@ def fetch_movie(name, basename, filename, added, allow_empty=False):
     movie.added = datetime.fromtimestamp(time.mktime(added))
     movie.ageweek = (datetime.now() - movie.added).days // 7
     movie.basename = basename
-    movie.filename = urllib.quote_plus(filename.decode('utf-8'))
+    movie.filename = urllib.quote_plus(filename.encode('utf-8'))
     movie.allocine = ALLOCINE_URL % urllib.quote_plus(fulltitle.encode('utf-8'))
     return movie
 
