@@ -124,7 +124,7 @@ def fetch_movie(name, basename, filename, added, allow_empty=False):
     movie.added = datetime.fromtimestamp(time.mktime(added))
     movie.ageweek = (datetime.now() - movie.added).days // 7
     movie.basename = basename
-    movie.filename = urllib.quote_plus(filename.encode('utf-8'))
+    movie.filename = urllib.quote(filename.encode('utf-8'))
     movie.allocine = ALLOCINE_URL % urllib.quote_plus(fulltitle.encode('utf-8'))
     return movie
 
