@@ -175,7 +175,7 @@ if __name__ == '__main__':
                       help=_("Include unknown movies"))
     parser.add_option("-x", "--exclude",
                       dest="exclude", default="",
-                      help=_("Comma-separated list of folders to exclude"))
+                      help=_("Exclude files or folders by name (comma-separated)"))
     parser.add_option("-s", "--minsize",
                       dest="minsize", type='int', default=-1,
                       help=_("Exclude files smaller than this size (in MB)"))

@@ -37,7 +37,7 @@ USAGE
                             Output to file
       -a, --all             Include unknown movies
       -x EXCLUDE, --exclude=EXCLUDE
-                            Comma-separated list of folders to exclude
+                            Exclude files or folders by name (comma-separated)
       -s MINSIZE, --minsize=MINSIZE
                             Exclude files smaller than this size (MB)
       -l LIMIT, --limit=LIMIT
