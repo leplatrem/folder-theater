@@ -41,7 +41,7 @@ BLACKLIST = ('dvdrip', 'bdrip',
              'xvid')
 
 MOVIE_EXT = ('ogm', 'avi', 'mp4', 'mkv', 'mpg', 'mpeg', 'divx', 'vob', 
-             'mt2s', '3gp', 'rmvb', 'rmv', 'wmv', 'mov')
+             'm2ts', '3gp', 'rmvb', 'rmv', 'wmv', 'mov')
 
 
 def list_titles(path, excludes=[], minsize=-1):
