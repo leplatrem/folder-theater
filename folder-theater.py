@@ -117,8 +117,10 @@ def fetch_movie(name, basename, filename, added, allow_empty=False):
         else:
             return None
     # Post process plot string
-    p = movie.get('plot', [''])[0]
-    movie.plot = p.split('::')[0]
+    movie.plot = movie.get('plot outline')
+    if movie.plot:
+        sep = re.compile(r'[»\|]')  # clean junk
+        movie.plot = sep.split(movie.plot)[0]
     # Additional fields
     movie.search = name
     movie.added = datetime.fromtimestamp(time.mktime(added))
