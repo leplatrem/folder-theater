@@ -18,14 +18,37 @@ On *Debian* or *Ubuntu*, install these with ::
 
     sudo apt-get install python-jinja2 python-imdbpy
 
-
 On *Windows*, follow `Czarek's tutorial <https://github.com/leplatrem/folder-theater/wiki>`_.
 
 *(Help for Mac OS instructions is welcome)*
 
+Make sure you run a recent version of python-imdbpy (like > 4.8).
+
+
 =====
 USAGE
 =====
+
+**I have no idea what I'm doing with a python file**
+
+It is a lot more stupid that was you think ! You run it in order to
+generate a static `.html` file ! It has two files : a python file that
+scraps *imdb* and provides the input data to the other file, a template.
+
+**How do I run it on my web server ?** 
+
+You run it in a command-line ! For example, in a crontab : 
+
+::
+
+    0 5,17 * * * /usr/bin/python /home/user/folder-theater.py --all /home/data/ > /var/www/index.html
+
+You can then protect its access is protected by a basic `.htaccess` file.
+
+
+
+Options
+-------
 
 ::
 
@@ -57,6 +80,15 @@ Add links for movies on local filesystem ::
 Add HTTP links for movies ::
 
     python folder-theater.py --url="http://server/example/" /path/to/folder/
+
+Full example ::
+
+   python folder-theater.py --all \
+                            --title="Personal VOD" \
+                            --exclude=".session" \
+                            --url="http:/server.com/files/ \
+                            /home/data/ > /var/www/index.html
+
 
 =======
 LICENSE
